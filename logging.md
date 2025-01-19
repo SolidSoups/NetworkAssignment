@@ -5,3 +5,6 @@ First commit, basic project setup. Starting out i have these couple things:
 - NetworkManagerEditorWindow. A window that allows me to easily start host and client sessions.
 
 My next steps are to interpolate movement as its getting hard on the eyesto see them stutter. Will try to get some client side prediction and reconciliation.
+
+# Entry 2
+Succesfully implemented interpolation for player movement and rotation. It's a little hard to test rn because when the unity editor is not in focus mode, the performance takes a drastic hit. BUT, I did a small check for if we were a client and moved the player and rotated so that a host could see what it would look like AND IT DEFINITELY INTERPOLATES. Anyways, im putting my focus on interpolated the bullets now...
