@@ -1,10 +1,14 @@
 using Unity.Netcode.Components;
 using UnityEngine;
 
-public class OwnedNetworkTransform : NetworkTransform
+namespace Network
 {
-  protected override bool OnIsServerAuthoritative()
+  public class OwnedNetworkTransform : NetworkTransform
   {
-    return false;
+    protected override bool OnIsServerAuthoritative()
+    {
+      return false;
+    }
   }
+  
 }

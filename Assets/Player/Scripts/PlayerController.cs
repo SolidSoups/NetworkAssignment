@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Network;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Player;
@@ -79,7 +80,7 @@ namespace Player
 
           if (IsServer)
           {
-            SyncTransformClientRpc(transform.position, transform.rotation, m_networkTimer.CurrentTick);
+            UpdateTransformClientRpc(transform.position, transform.rotation, m_networkTimer.CurrentTick);
           }
           else
           {
@@ -127,11 +128,11 @@ namespace Player
     [ServerRpc] void SyncTransformServerRpc(Vector2 position, Quaternion rotation, int tick) {
       transform.position= position;
       transform.rotation = rotation;
-      SyncTransformClientRpc(position, rotation, tick);
+      UpdateTransformClientRpc(position, rotation, tick);
     }
 
     [ClientRpc]
-     void SyncTransformClientRpc(Vector3 position, Quaternion rotation, int tick)
+     void UpdateTransformClientRpc(Vector3 position, Quaternion rotation, int tick)
     {
       if (IsOwner) return;
       m_snapshotBuffer.Add(new PlayerSnapshot() {
