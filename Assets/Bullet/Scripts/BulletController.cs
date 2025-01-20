@@ -105,6 +105,7 @@ namespace Bullet
       if (other.CompareTag("Player"))
       {
         // Perform some kind of hit here 
+        Debug.Log("Hit player");
       }
     }
   }

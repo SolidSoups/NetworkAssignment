@@ -9,7 +9,6 @@ using Player.Scripts;
 using Unity.Netcode;
 
 
-
 namespace Player
 {
   public struct PlayerSnapshot // snapshot of player state to buffer and interpolate between
@@ -20,6 +19,8 @@ namespace Player
   }
   public class PlayerController : NetworkBehaviour
   {
+    [SerializeField] private GameObject m_scoreTextPrefab;
+    
     [Header("Fire Settings")]
     [SerializeField] GameObject m_bulletPrefab;
     [SerializeField] private float m_gunDelay = 0.05f;       // seconds
@@ -35,9 +36,10 @@ namespace Player
     const int k_interpolationTickDelay = 2;
    
     // input stuff
-    private PlayerInputActions m_playerControls;
-    private InputAction        move;
-    private InputAction        fire;
+    PlayerInputActions m_playerControls;
+    InputAction        move;
+    InputAction        fire;
+    InputAction        emote;
 
     private void Awake()
     {
@@ -49,6 +51,30 @@ namespace Player
       m_networkTimer = new NetworkTimer(k_serverTickRate);
       m_snapshotBuffer = new List<PlayerSnapshot>();
     }
+
+    // [ServerRpc]
+    // void SpawnTextServerRpc(ulong clientId)
+    // {
+    //   GameObject newObject = Instantiate(m_scoreTextPrefab);
+    //   newObject.GetComponent<NetworkObject>()
+    //       .SpawnWithOwnership(clientId, destroyWithScene: false);
+    //   m_spawnedScoreText = newObject.GetComponent<ScoreText>();
+    //   SetScoreTextClientRpc(m_spawnedScoreText.GetComponent<NetworkObject>().NetworkObjectId); 
+    // }
+    //
+    // [ClientRpc]
+    // void SetScoreTextClientRpc(ulong scoreTextNetworkObjectId)
+    // {
+    //   if (NetworkManager
+    //       .Singleton
+    //       .SpawnManager
+    //       .SpawnedObjects
+    //       .TryGetValue(scoreTextNetworkObjectId, out var networkObject))
+    //   {
+    //     Debug.Log("Succesfully set score text references");
+    //     m_spawnedScoreText = networkObject.gameObject.GetComponent<ScoreText>();
+    //   }
+    // }
 
     public override void OnNetworkSpawn()
     {
@@ -94,6 +120,7 @@ namespace Player
         }
       }
     }
+
     // some movement ig
     public void HandleMovement()
     {
@@ -162,7 +189,19 @@ namespace Player
       GameObject bullet = Instantiate(m_bulletPrefab, transform.position, transform.rotation);
       bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, destroyWithScene: false);
       Destroy(bullet, m_bulletDespawnTime); 
-    } 
+    }
+
+    public void DoEmote()
+    {
+      DoEmoteServerRpc();
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void DoEmoteServerRpc()
+    {
+      GameObject spawnedEmote = Instantiate(m_scoreTextPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+      spawnedEmote.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, destroyWithScene: false);
+      Destroy(spawnedEmote, 5f);
+    }
   
   
     private void OnEnable()
@@ -173,12 +212,17 @@ namespace Player
       fire = m_playerControls.Player.Fire;
       fire.Enable();
       fire.performed += ctx => ShootGun();
+      
+      emote = m_playerControls.Player.Emote;
+      emote.Enable();
+      emote.performed += ctx => DoEmote();
     }
   
     private void OnDisable()
     {
       move.Disable();
       fire.Disable();
+      emote.Disable();
       m_playerControls.Disable();
     }
   }

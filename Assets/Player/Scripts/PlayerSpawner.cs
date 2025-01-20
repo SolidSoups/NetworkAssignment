@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Player.Scripts
 {
@@ -11,25 +12,24 @@ namespace Player.Scripts
   {
     [Header("References")] [SerializeField]
     private GameObject playerPrefab;
-
     
-    private void Start()
-    {
-      if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
-      {
-        Debug.Log("Spawning PlayerSpawner as NetworkObject on server or host");
-        GetComponent<NetworkObject>().Spawn();
-    
-        if (NetworkManager.Singleton.IsHost)
-        {
-          SpawnPlayerForHost();
-        }
-      
-        NetworkManager.Singleton.OnClientConnectedCallback += SpawnPlayerForClient;
-      }
-      Debug.Log($"PlayerSpawner Start called on {(IsHost ? "Host" : IsClient ? "Client" : "Server")}");
-    
-    }
+    // private void Start()
+    // {
+    //   if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)
+    //   {
+    //     Debug.Log("Spawning PlayerSpawner as NetworkObject on server or host");
+    //     GetComponent<NetworkObject>().Spawn();
+    //
+    //     if (NetworkManager.Singleton.IsHost)
+    //     {
+    //       SpawnPlayerForHost();
+    //     }
+    //   
+    //     NetworkManager.Singleton.OnClientConnectedCallback += SpawnPlayerForClient;
+    //   }
+    //   Debug.Log($"PlayerSpawner Start called on {(IsHost ? "Host" : IsClient ? "Client" : "Server")}");
+    //
+    // }
 
     public override void OnNetworkSpawn()
     {

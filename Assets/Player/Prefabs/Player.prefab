@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8430878253202290027}
-  - component: {fileID: 8821016106451435724}
+  - component: {fileID: 931341538685442102}
   - component: {fileID: 2765846653386163475}
   - component: {fileID: 6532991308225959058}
   - component: {fileID: 1043891328848704642}
@@ -38,7 +38,7 @@ Transform:
   - {fileID: 1143380699847980997}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8821016106451435724
+--- !u!114 &931341538685442102
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3206061710
+  GlobalObjectIdHash: 1806321894
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  m_scoreTextPrefab: {fileID: 7777888104261854478, guid: 09121fb628cfa4d4c95b1b13ce64e5fe, type: 3}
   m_bulletPrefab: {fileID: 7944292438988467668, guid: fc814b198fce9a541bc3f09c11912ba8, type: 3}
   m_gunDelay: 0.25
   m_bulletDespawnTime: 5
