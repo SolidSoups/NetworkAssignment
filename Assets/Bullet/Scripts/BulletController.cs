@@ -104,16 +104,7 @@ namespace Bullet
       
       if (other.CompareTag("Player"))
       {
-        NetworkObject no = other.gameObject.GetComponent<NetworkObject>();
-        Debug.Log($"Object : no == null => {no == null}");
-        if (no != null)
-        {
-          Debug.Log($"Hit a network object with id {no.NetworkObjectId}");
-          if(IsServer)
-            ScoreManager.Instance.Score += 20;
-          else
-            ScoreManager.Instance.SetScoreServerRPC(ScoreManager.Instance.Score + 20);
-        }
+        // Perform some kind of hit here 
       }
     }
   }

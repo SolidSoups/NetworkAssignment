@@ -14,7 +14,7 @@ namespace Player
 {
   public struct PlayerSnapshot // snapshot of player state to buffer and interpolate between
   {
-    public Vector3 Position;
+    public Vector2 Position;
     public Quaternion Rotation;
     public int Tick;
   }
@@ -30,8 +30,9 @@ namespace Player
     Camera m_mainCamera;
 
     NetworkTimer m_networkTimer;
-    const float k_serverTickRate = 60f;
     List<PlayerSnapshot> m_snapshotBuffer;
+    const float k_serverTickRate = 60f;
+    const int k_interpolationTickDelay = 2;
    
     // input stuff
     private PlayerInputActions m_playerControls;
@@ -114,15 +115,22 @@ namespace Player
 
     void InterpolateRemotePlayer()
     {
-      while(m_snapshotBuffer.Count >= 2 && m_snapshotBuffer[1].Tick <= m_networkTimer.CurrentTick)
+      int targetTick = m_networkTimer.CurrentTick - k_interpolationTickDelay;
+
+      while (m_snapshotBuffer.Count >= 2 && m_snapshotBuffer[1].Tick <= targetTick) 
       {
-        PlayerSnapshot oldSnapshot = m_snapshotBuffer[0];
-        PlayerSnapshot newSnapshot = m_snapshotBuffer[1];
-        float t = (float)(m_networkTimer.CurrentTick - oldSnapshot.Tick) / (newSnapshot.Tick - oldSnapshot.Tick);
-        transform.position = Vector3.Lerp(oldSnapshot.Position, newSnapshot.Position, t);
-        transform.rotation = Quaternion.Slerp(oldSnapshot.Rotation, newSnapshot.Rotation, t);
         m_snapshotBuffer.RemoveAt(0);
-      } 
+      }
+
+      if (m_snapshotBuffer.Count < 2) return;
+      
+      PlayerSnapshot first = m_snapshotBuffer[0];
+      PlayerSnapshot second = m_snapshotBuffer[1];
+      
+      float t = (float)(m_networkTimer.CurrentTick - first.Tick) / (second.Tick - first.Tick);
+      
+      transform.position = Vector2.Lerp(first.Position, second.Position, t);
+      transform.rotation = Quaternion.Slerp(first.Rotation, second.Rotation, t);
     }
   
     [ServerRpc] void SyncTransformServerRpc(Vector2 position, Quaternion rotation, int tick) {

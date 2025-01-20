@@ -11,3 +11,6 @@ Succesfully implemented interpolation for player movement and rotation. It's a l
 
 # Entry 3
 Now bullets are interpolated and i realized that there is a better way to interpolate, so i will be revising the player implementation of interpolation.
+
+# Entry 4
+Finally done with this interpolation s###. it's making my head hurt. But now we can move on :>
